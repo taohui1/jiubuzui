@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <title>订单支付</title>
+    <link rel="stylesheet" href="static/mui.min.css">
+    <link rel="stylesheet" href="static/mui.picker.css">
+    <link rel="stylesheet" href="static/mui.poppicker.css">
+    <script>
+        document.documentElement.style.fontSize = document.documentElement.clientWidth / 7.5 + 'px';
+    </script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            background: rgb(242, 242, 242);
+            font-size: 0.32rem;
+        }
+
+        input {
+            user-select: auto !important;
+            -webkit-user-select: text !important;
+        }
+
+        .order-good {
+            overflow: hidden;
+            padding: 0.2rem;
+            background: #fff;
+        }
+
+        .order-good img {
+            height: 1.52rem;
+            width: 1.52rem;
+            float: left;
+        }
+
+        .detail-footer {
+            height: 0.8rem;
+            width: 100%;
+            line-height: 0.8rem;
+            text-align: center;
+            position: fixed;
+            bottom: -1px;
+            left: 0;
+            background: #e71f1b;
+            color: #fff;
+            font-size: 0.34rem;
+        }
+
+        .good-infor {
+            margin-left: 1.6rem;
+            color: rgb(51, 51, 51);
+            overflow: hidden;
+        }
+
+        .good-price {
+            overflow: hidden;
+            margin-top: 0.3rem;
+        }
+
+        .now-price {
+            float: left;
+            color: #e71f1b;
+        }
+
+        .good-num {
+            float: right;
+        }
+
+        .order-header {
+            height: 0.8rem;
+            line-height: 0.8rem;
+            padding: 0 0.2rem;
+            color: rgb(51, 51, 51);
+            font-size: 0.3rem;
+        }
+
+        .receiving-infor {
+            overflow: hidden;
+            background-color: #fff;
+            padding-left: 0.2rem;
+        }
+
+        .receiving-li {
+            height: 0.88rem;
+            line-height: 0.88rem;
+            width: 100%;
+            border-bottom: 1px solid rgb(242, 242, 242);
+        }
+
+        .receiving-left {
+            float: left;
+        }
+
+        .receiving-right {
+            float: right;
+            width: 70%;
+            text-align: end;
+        }
+
+        .receiving-right input {
+            text-align: end;
+            width: 90%;
+            height: 0.7rem;
+            border: none;
+            font-size: 0.32rem;
+            padding: 0 0.2rem;
+        }
+
+        .add-detail {
+            overflow: hidden;
+            margin: 0.2rem 0;
+        }
+
+        .add-text {
+            width: 92%;
+            font-size: 0.32rem;
+            border: none;
+            padding: 0.2rem;
+        }
+
+        .good-namestyle {
+            height: 1.1rem;
+            overflow: hidden;
+        }
+
+        .hide {
+            display: none !important;
+        }
+
+        .loadding-div {
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 11;
+            background: rgba(0, 0, 0, 0.7)
+        }
+
+        .panel {
+            height: 3.5rem;
+            width: 6rem;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            margin-left: -3rem;
+            margin-top: -1.75rem;
+            background: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .line {
+            height: 0.9rem;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0.9rem;
+            border-bottom: 1px solid rgb(242, 242, 242);
+        }
+
+        .line-left {
+            float: left;
+        }
+
+        .line-right {
+            float: right;
+            width: 70% !important;
+            height: 0.8rem !important;
+            padding: 0 !important;
+            border: none !important;
+            margin-top: 0.1rem !important;
+            text-align: end !important;
+            padding-right: 5px !important;
+            font-size: 14px !important;
+        }
+
+        .code-right {
+            float: right;
+            width: 70%;
+            position: relative;
+            overflow: hidden;
+            height: 0.9rem;
+        }
+
+        .code-input {
+            position: absolute;
+            height: 0.8rem !important;
+            width: 60% !important;
+            left: 0;
+            bottom: 0.05rem;
+            padding: 0 !important;
+            border: none !important;
+            text-align: end !important;
+            padding-right: 5px !important;
+            font-size: 14px !important;
+        }
+
+        .code-div {
+            position: absolute;
+            right: 0;
+            color: #e71f1b;
+            font-size: 0.24rem;
+        }
+
+        .login-style {
+            background: #e71f1b;
+            height: 0.7rem;
+            width: 2rem;
+            text-align: center;
+            color: #fff;
+            line-height: 0.7rem;
+            display: inline-block;
+            margin-top: 0.5rem;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="orderPay" v-if='goodList'>
+        <div class="order-header">
+            订单信息
+        </div>
+        <div class="order-good">
+            <img :src="'http://47.97.211.84'+goodList.goods_content[0]">
+            <div class="good-infor">
+                <div class="good-namestyle">
+                    {{goodList.goods_name}}
+                </div>
+                <div class="good-price">
+                    <div class="now-price">
+                        ￥
+                        <span v-if='goodList.goods_promotion_type == 2'>
+                            {{goodList.xianshi_price}}
+                        </span>
+                        <span v-else>
+                            {{goodList.goods_costprice}}
+                        </span>
+                    </div>
+                    <div class="good-num">
+                        x{{goodNum}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="order-header">
+            为了保证您能及时收到商品,请填写您的收货地址
+        </div>
+        <div class="receiving-infor">
+            <div class="receiving-li">
+                <div class="receiving-left">
+                    收货人
+                </div>
+                <div class="receiving-right">
+                    <input type="text" placeholder="收货人姓名" v-model='payname'>
+                </div>
+            </div>
+            <div class="receiving-li">
+                <div class="receiving-left">
+                    联系方式
+                </div>
+                <div class="receiving-right">
+                    <input type="number" maxlength="11" oninput="if(value.length>11)value=value.slice(0,11)"
+                        v-model='payphone' placeholder="请输入手机号">
+                </div>
+            </div>
+            <div class="receiving-li">
+                <div class="receiving-left">
+                    选择地区
+                </div>
+                <div class="receiving-right">
+                    <input type="text" id="showCityPicker3" placeholder="请选择地区">
+                </div>
+            </div>
+            <div class="add-detail">
+                <textarea name="" cols="30" rows="3" v-model='payadd' placeholder="请输入详细地址" class="add-text"></textarea>
+            </div>
+        </div>
+        <div class="detail-footer" @click='payNow'>
+            立即购买
+        </div>
+        <div class="loadding-div" :class="{'hide': loginStatus}">
+            <div class="panel">
+                <div class="line">
+                    <div class="line-left">
+                        手机号:
+                    </div>
+                    <input type="number" maxlength="11" placeholder="请输入手机号" class="line-right" v-model='userphone'>
+                </div>
+                <div class="line">
+                    <div class="line-left">
+                        验证码:
+                    </div>
+                    <div class="code-right">
+                        <input type="number" maxlength="4" v-model='code' placeholder="请输入验证码" class="code-input">
+                        <div class="code-div" @click='getcode' v-if='!countState'>获取验证码</div>
+                        <div class="code-div" v-if='countState'>{{count}}秒后获取</div>
+                    </div>
+                </div>
+                <div class="login-style" @click='login'>
+                    登录
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+    <script src="static/jquery-2.2.3.min.js"></script>
+    <script src="static/vue.min.js"></script>
+    <script src="static/mui.min.js"></script>
+    <script src="static/mui.picker.js"></script>
+    <script src="static/mui.poppicker.js"></script>
+    <script src="static/city.data-3.js"></script>
+    <script>
+        (function ($, doc) {
+            $.init();
+            $.ready(function () {
+                /**
+                 * 获取对象属性的值
+                 * 主要用于过滤三级联动中，可能出现的最低级的数据不存在的情况，实际开发中需要注意这一点；
+                 * @param {Object} obj 对象
+                 * @param {String} param 属性名
+                 */
+                var _getParam = function (obj, param) {
+                    return obj[param] || '';
+                };
+                //-----------------------------------------
+                //					//级联示例
+                var cityPicker3 = new $.PopPicker({
+                    layer: 3
+                });
+                cityPicker3.setData(cityData3);
+                var showCityPickerButton = doc.getElementById('showCityPicker3');
+                var cityResult3 = doc.getElementById('showCityPicker3');
+
+                showCityPickerButton.addEventListener('tap', function (event) {
+
+                    cityPicker3.show(function (items) {
+                        console.log(cityResult3)
+                        cityResult3.value = _getParam(items[0], 'text') + _getParam(items[1], 'text') + _getParam(items[2], 'text');
+                    });
+                }, false);
+            });
+        })(mui, document);
+    </script>
+    <script>
+        const formData = new FormData();
+        const formDataPay = new FormData();
+        new Vue({
+            el: '#orderPay',
+            data: {
+                goodNum: '',
+                goodList: '',
+                loginStatus: false,
+                userphone: '',
+                code: '',
+                count: null,
+                timer: '',
+                countState: false,
+                payname: '',
+                payphone: '',
+                payadd: ''
+            },
+            methods: {
+                // wxpay() {
+                //     let that = this;
+                //     $.ajax({
+                //         url: 'http://www.jiubuzui.com/home/public/index.php/index/index/GetOpenid',
+                //         type: 'get',
+                //         dataType: 'json',
+                //         timeout: 1000,
+                //     });
+
+                //     $.ajax({
+                //         url: 'http://www.jiubuzui.com/home/public/index.php/index/index/wx_pay',
+                //         type: 'get',
+                //         dataType: 'json',
+                //         timeout: 1000,
+                //         success: function (data, status) {
+                //             alert(JSON.stringify(data))
+                //         },
+                //         fail: function (err, status) {
+                //             mui.toast(err)
+                //         }
+                //     })
+                // },
+                // getOpenId(code) {
+                //     alert(111)
+                // },
+                alipay(totle, order_sn, title) {
+                    var invitecode;
+                    
+                    if (localStorage.getItem("invitecode")) {
+                        invitecode = localStorage.getItem("invitecode");
+                    }
+                    alert(1)
+                    window.location.href = `http://www.jiubuzui.com/alipayweb/index.php?totle=${totle}&order_sn=${order_sn}&title=酒不醉酒品&invitecode=${invitecode}`
+                },
+                //立即购买
+                payNow() {
+                    let that = this;
+                    let order_amount, goods_amount;
+                    let cityAdd = document.getElementById("showCityPicker3").value;
+                    var invitecode='';
+                    if (localStorage.getItem("invitecode")) {
+                        invitecode = localStorage.getItem("invitecode")?localStorage.getItem("invitecode"):"";
+                    }
+                    console.log(cityAdd)
+                    if (that.goodList.goods_promotion_type == 2) {
+                        goods_amount = that.goodList.xianshi_price;
+                        order_amount = that.goodList.xianshi_price * 1 + that.goodList.goods_freight * 1;
+                    } else {
+                        goods_amount = that.goodList.goods_costprice;
+                        order_amount = that.goodList.goods_costprice * 1 + that.goodList.goods_freight * 1;
+                    }
+
+                    if (that.payname == '') {
+                        mui.toast("请输入收货人姓名")
+                    } else if (!that.payphone || that.payphone.length != '11') {
+                        mui.toast("手机号格式错误")
+                    } else if (cityAdd == '') {
+                        mui.toast("请选择地区")
+                    } else if (that.payadd == '') {
+                        mui.toast("请输入收货地址")
+                    } else {
+                        formData.set('member_id', localStorage.getItem('member_id'));
+                        formData.set('true_name', that.payname);
+                        formData.set('address', cityAdd + that.payadd);
+                        formData.set('mob_phone', that.payphone);
+                        formData.set('order_message', '');
+                        formData.set('vid', that.goodList.vid);
+                        formData.set('gid', that.goodList.gid);
+                        formData.set('buyer_name', that.payname);
+                        formData.set('goods_num', that.goodNum);
+                        formData.set('goods_amount', goods_amount);
+                        formData.set('order_amount', order_amount);
+                        formData.set('shipping_fee', that.goodList.goods_freight);
+                        formData.set('store_name', that.goodList.store_name);
+                        formData.set('invitecode', invitecode);
+                        $.ajax({
+                            url: 'http://www.jiubuzui.com/index.php/home/ios/sourceAddress',
+                            type: 'post',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            timeout: 1000,
+                            success: function (data, status) {
+                                console.log(JSON.parse(data))
+                                var data = JSON.parse(data)
+                                if (data.code == 200) {
+                                    that.alipay(order_amount, data.data.order_sn, that.goodList.goods_name);
+                                } else {
+                                    mui.toast(data.message)
+                                }
+                            },
+                            fail: function (err, status) {
+                                console.log(err)
+                            }
+                        })
+                    }
+
+                },
+                login() {
+                    let that = this;
+                    if (!this.userphone || this.userphone.length != '11') {
+                        mui.toast("手机号码格式不正确")
+
+                    } else if (!this.code || this.code.length != '4') {
+
+                        mui.toast("验证码格式不正确")
+                    } else {
+                        $.ajax({
+                            url: 'http://www.jiubuzui.com/index.php/home/ios/Phone_Verification',
+                            type: 'get',
+                            data: {
+                                member_mobile: that.userphone,
+                                verification: that.code
+                            },
+                            dataType: 'json',
+                            timeout: 1000,
+                            success: function (data, status) {
+                                console.log(data)
+                                if (data.code == 200) {
+                                    mui.toast('登陆成功,快去填写信息吧！')
+                                    that.loginStatus = true;
+                                    // localStorage.setItem("member_id", data.data.member_id)
+                                } else {
+                                    mui.toast(data.message)
+                                }
+                            },
+                            fail: function (err, status) {
+                                mui.toast(err)
+                            }
+                        })
+                    }
+                },
+                countdown() {
+                    let that = this;
+                    this.count = 60;
+                    that.timer = setInterval(function () {
+                        that.count--;
+                        if (that.count == 0) {
+                            clearInterval(that.timer)
+                            that.countState = false;
+                        }
+                    }, 1000)
+                },
+                getcode() {
+                    let that = this;
+                    if (this.userphone && this.userphone.length == '11') {
+                        that.countdown()
+                        that.countState = true;
+                        $.ajax({
+                            url: 'http://www.jiubuzui.com/index.php/home/ios/Phone_codeSms',
+                            type: 'get',
+                            data: {
+                                member_mobile: that.userphone
+                            },
+                            dataType: 'json',
+                            timeout: 1000,
+                            success: function (data, status) {
+                                console.log(data)
+                                if (data.code == 200) {
+
+                                    mui.toast("发送成功")
+                                } else {
+                                    mui.toast(data.message)
+                                }
+                            },
+                            fail: function (err, status) {
+                                console.log(err)
+                                mui.toast(err)
+                            }
+                        })
+                    } else {
+                        console.log("手机号码格式不正确")
+                        mui.toast("手机号码格式不正确")
+                    }
+
+                },
+            },
+            mounted() {
+                // this.wxpay()
+               
+                // if (localStorage.getItem("member_id")) {
+                //     this.loginStatus = true;
+                // }
+                function getParam(paramName) {
+                    paramValue = "", isFound = !1;
+                    if (this.location.search.indexOf("?") == 0 && this.location.search.indexOf("=") > 1) {
+                        arrSource = unescape(this.location.search).substring(1, this.location.search.length).split("&"), i = 0;
+                        while (i < arrSource.length && !isFound) arrSource[i].indexOf("=") > 0 && arrSource[i].split("=")[0].toLowerCase() == paramName.toLowerCase() && (paramValue = arrSource[i].split("=")[1], isFound = !0), i++
+                    }
+                    return paramValue == "" && (paramValue = null), paramValue
+                }
+                this.goodNum = getParam('goodNum')
+
+                this.goodList = JSON.parse(localStorage.getItem("goodList"))
+                console.log(this.goodList)
+            }
+        })
+    </script>
+</body>
+
+</html>

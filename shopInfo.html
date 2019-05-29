@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <title>填写信息</title>
+    <link rel="stylesheet" href="__STATIC__/static/mui.min.css">
+    <link rel="stylesheet" href="__STATIC__/static/mui.picker.css">
+    <link rel="stylesheet" href="__STATIC__/static/mui.poppicker.css">
+    <script>
+        document.documentElement.style.fontSize = document.documentElement.clientWidth / 7.5 + 'px';
+    </script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            background: rgb(242, 242, 242);
+            font-size: 0.32rem;
+        }
+
+        input {
+            user-select: auto !important;
+            -webkit-user-select: text !important;
+        }
+
+        .detail-footer {
+            height: 0.8rem;
+            width: 100%;
+            line-height: 0.8rem;
+            text-align: center;
+            position: fixed;
+            bottom: -1px;
+            left: 0;
+            background: #e71f1b;
+            color: #fff;
+            font-size: 0.34rem;
+        }
+
+        .good-infor {
+            margin-left: 1.6rem;
+            color: rgb(51, 51, 51);
+            overflow: hidden;
+        }
+
+        .good-price {
+            overflow: hidden;
+            margin-top: 0.3rem;
+        }
+
+        .now-price {
+            float: left;
+            color: #e71f1b;
+        }
+
+        .good-num {
+            float: right;
+        }
+
+        .order-header {
+            height: 0.8rem;
+            line-height: 0.8rem;
+            padding: 0 0.2rem;
+            color: rgb(51, 51, 51);
+            font-size: 0.3rem;
+        }
+
+        .receiving-infor {
+            overflow: hidden;
+            background-color: #fff;
+            padding-left: 0.2rem;
+        }
+
+        .receiving-li {
+            height: 0.88rem;
+            line-height: 0.88rem;
+            width: 100%;
+            border-bottom: 1px solid rgb(242, 242, 242);
+        }
+
+        .receiving-photo {
+            height: 1.4rem;
+            line-height: 1.4rem;
+            width: 100%;
+            border-bottom: 1px solid rgb(242, 242, 242);
+        }
+
+        .receiving-left {
+            float: left;
+        }
+
+        .receiving-right {
+            float: right;
+            width: 70%;
+        }
+
+        .receiving-right input {
+            text-align: end;
+            width: 100%;
+            height: 0.7rem;
+            border: none;
+            font-size: 0.32rem;
+            padding: 0 0.2rem;
+        }
+
+        .add-detail {
+            overflow: hidden;
+            margin: 0.2rem 0;
+        }
+
+        .add-text {
+            width: 92%;
+            font-size: 0.32rem;
+            border: none;
+            padding: 0.2rem;
+        }
+
+        .img-file {
+            float: right;
+            height: 1.2rem;
+            width: 1.2rem;
+            border-radius: 4px;
+
+        }
+
+        .img-file img {
+            height: 100%;
+            width: 100%;
+        }
+
+        #file {
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            position: absolute;
+            left: 0;
+            top: 0;
+            cursor: pointer;
+            z-index: 5;
+        }
+
+        .receiving-photoarea {
+            float: right;
+            height: 1.2rem;
+            width: 1.2rem;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.1rem;
+            margin-right: 15px;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="orderPay" v-clock>
+        <div class="receiving-infor">
+            <div class="receiving-li">
+                <div class="receiving-left">
+                    收货人
+                </div>
+                <div class="receiving-right">
+                    <input type="text" placeholder="收货人姓名" v-model='username'>
+                </div>
+            </div>
+            <div class="receiving-li">
+                <div class="receiving-left">
+                    联系方式
+                </div>
+                <div class="receiving-right">
+                    <input type="number" oninput="if(value.length>11)value=value.slice(0,11)" placeholder="请输入手机号"
+                        v-model='userphone'>
+                </div>
+            </div>
+            <div class="receiving-li">
+                <div class="receiving-left">
+                    邀请码
+                </div>
+                <div class="receiving-right">
+                    <input type="text" v-model='invitecode' placeholder="请输入邀请码">
+                </div>
+            </div>
+        </div>
+        <div class="order-header">
+            为了保证您能及时收到商品,请填写您的收货地址
+        </div>
+        <div class="receiving-infor">
+            <div class="receiving-li">
+                <div class="receiving-left">
+                    选择地区
+                </div>
+                <div class="receiving-right">
+                    <input type="text" id="showCityPicker3" placeholder="选择地区">
+                </div>
+            </div>
+            <div class="receiving-li">
+                <div class="receiving-left">
+                    详细地址
+                </div>
+                <div class="receiving-right">
+                    <input type="text" v-model='useradd' placeholder="请输入详细地址">
+                </div>
+            </div>
+        </div>
+        <div class="order-header">
+            店铺信息
+        </div>
+
+        <div class="receiving-infor">
+            <div class="receiving-li">
+                <div class="receiving-left">
+                    店铺名称
+                </div>
+                <div class="receiving-right">
+                    <input type="text" v-model='shopname' placeholder="请输入店铺名称">
+                </div>
+            </div>
+            <div class="receiving-photo">
+                <div class="receiving-left">
+                    门店logo
+                </div>
+                <div class="receiving-photoarea">
+                    <input type="file" id="file" name="" />
+                    <div id="image" class="img-file">
+                        <img src="__STATIC__/static/src/addphoto.jpg" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="detail-footer" @click='paynow'>
+            马上支付
+        </div>
+    </div>
+    <script src="__STATIC__/static/jquery-2.2.3.min.js"></script>
+    <script src="__STATIC__/static/vue.min.js"></script>
+    <script src="__STATIC__/static/mui.min.js"></script>
+    <script src="__STATIC__/static/mui.picker.js"></script>
+    <script src="__STATIC__/static/mui.poppicker.js"></script>
+    <script src="__STATIC__/static/city.data-3.js"></script>
+    <script>
+        (function ($, doc) {
+            $.init();
+            $.ready(function () {
+                console.log("ssssss")
+                /**
+                 * 获取对象属性的值
+                 * 主要用于过滤三级联动中，可能出现的最低级的数据不存在的情况，实际开发中需要注意这一点；
+                 * @param {Object} obj 对象
+                 * @param {String} param 属性名
+                 */
+                var _getParam = function (obj, param) {
+                    return obj[param] || '';
+                };
+                //-----------------------------------------
+                //					//级联示例
+                var cityPicker3 = new $.PopPicker({
+                    layer: 3
+                });
+                cityPicker3.setData(cityData3);
+                var showCityPickerButton = doc.getElementById('showCityPicker3');
+                var cityResult3 = doc.getElementById('showCityPicker3');
+
+                showCityPickerButton.addEventListener('tap', function (event) {
+
+                    cityPicker3.show(function (items) {
+                        console.log(cityResult3)
+                        cityResult3.value = _getParam(items[0], 'text') + _getParam(items[1], 'text') + _getParam(items[2], 'text');
+                    });
+                }, false);
+            });
+        })(mui, document);
+    </script>
+    <script>
+        const formData = new FormData();
+        new Vue({
+            el: '#orderPay',
+            data: {
+                username: '',
+                userphone: '',
+                invitecode: '',
+                useradd: '',
+                logoimg: '',
+                paneltext: '',
+                goodId: '',
+                shopname: ''
+            },
+            methods: {
+                alipay(totle,order_sn,title,member_id){
+                    var invitecode;
+                    if(localStorage.getItem("invitecode")){
+                        invitecode = localStorage.getItem("invitecode");
+                    }
+                    window.location.href=`http://www.jiubuzui.com/alipayweb/index.php?totle=${totle}&order_sn=${order_sn}&title=购买365礼包&invitecode=${invitecode}&body=${member_id}`
+                },
+                paynow() {
+                    let that = this;
+                    let cityAdd = document.getElementById("showCityPicker3").value;
+                    console.log(cityAdd)
+                    if (that.username == '') {
+                        mui.toast("请输入收货人姓名")
+                    } else if (!that.userphone || that.userphone.length != '11') {
+                        mui.toast("手机号格式错误")
+                    } else if(cityAdd == ''){
+                        mui.toast("请选择地区")
+                    } else if (that.useradd == '') {
+                        mui.toast("请输入收货地址")
+                    } else if (that.logoimg == '') {
+                        mui.toast("请录入店铺logo")
+                    } else if (that.shopname == '') {
+                        mui.toast("请录入店铺名称")
+                    } else {
+                        formData.set('member_id', localStorage.getItem('member_id'));
+                        formData.set('dummy_store_name', that.shopname);
+                        formData.set('set_neal', that.goodId);
+                        formData.set('name', that.username);
+                        formData.set('telephone', that.userphone);
+                        formData.set('address', cityAdd+that.useradd);
+                        formData.set('referee_num', that.invitecode);
+                        $.ajax({
+                            url: 'http://www.jiubuzui.com/index.php/home/ios/web_dummy_merchants',
+                            type: 'post',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            timeout: 1000,
+                            success: function (data, status) {
+                            
+                                console.log(JSON.parse(data))
+                                var data = JSON.parse(data)
+                                if(data.code == 200){
+                                    that.alipay('365',data.data,'购买365礼包',localStorage.getItem('member_id'));
+                                }else{
+                                    mui.toast(data.message)
+                                }
+                            },
+                            fail: function (err, status) {
+                                console.log(err)
+                            }
+                        })
+                    }
+                }
+            },
+            mounted() {
+                var that = this;
+
+                if (localStorage.getItem('invitecode')) {
+                    that.invitecode = localStorage.getItem('invitecode')
+                }
+                //获取url参数
+                function getParam(paramName) {
+                    paramValue = "", isFound = !1;
+                    if (this.location.search.indexOf("?") == 0 && this.location.search.indexOf("=") > 1) {
+                        arrSource = unescape(this.location.search).substring(1, this.location.search.length).split("&"), i = 0;
+                        while (i < arrSource.length && !isFound) arrSource[i].indexOf("=") > 0 && arrSource[i].split("=")[0].toLowerCase() == paramName.toLowerCase() && (paramValue = arrSource[i].split("=")[1], isFound = !0), i++
+                    }
+                    return paramValue == "" && (paramValue = null), paramValue
+                }
+                this.goodId = getParam('goodId')
+
+                console.log(this.goodId)
+                document.getElementById('file').onchange = function () {
+                    var imgFile = this.files[0];
+                    console.log(imgFile)
+                    formData.set('store_image_logo', imgFile);
+                    that.logoimg = 1;
+                    var fr = new FileReader();
+                    fr.onload = function () {
+                        document.getElementById('image').getElementsByTagName('img')[0].src = fr.result;
+                    };
+                    fr.readAsDataURL(imgFile);
+                };
+            }
+        })
+    </script>
+</body>
+
+</html>

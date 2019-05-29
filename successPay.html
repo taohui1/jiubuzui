@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <title>支付成功</title>
+    <script src="__STATIC__/static/vue.min.js"></script>
+    <script>
+        document.documentElement.style.fontSize = document.documentElement.clientWidth / 7.5 + 'px';
+    </script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            background:#fff;
+            font-size: 0.32rem;
+        }
+        input{
+         user-select: auto !important;
+         -webkit-user-select:text !important;
+       }
+       .img-div{
+           padding: 140px 0 30px;
+           text-align: center
+       }
+       .success-icon{
+           height: 64px;
+           width: 64px;
+           display: inline-block;
+       }
+       .text-01{
+           text-align: center;
+           font-size: 21px;
+           color: #000;
+       }
+       .text-02{
+           text-align: center;
+           font-size: 13px;
+           color: rgb(136,136,136);
+           margin: 10px 0 50px;
+       }
+       .button-div{
+           text-align: center;
+           padding: 0 30px;
+       }
+       .button-01{
+            background: #e71f1b;
+            height: 44px;
+            line-height: 44px;
+            width: 100%;
+            text-align: center;
+            font-size: 17px;
+            color: #fff;
+       }
+    </style>
+</head>
+
+<body>
+    <div id="successPay" v-clock>
+        <div class="img-div">
+            <img src="__STATIC__/static/src/recharge-success.png" alt="" class="success-icon">
+        </div>
+        <div class="text-01">下单成功</div>
+        <div class="text-02">请耐心等待商品到达</div>
+        <div class="text-02">请耐心等待商品到达</div>
+        <!-- <div class="button-div">
+            <div class="button-01" @click='continulPay'>
+                继续下单
+            </div>
+        </div> -->
+    </div>
+  
+    <script>
+        new Vue({
+            el: '#successPay',
+            data: {
+              gid:'',
+              invitecode:''
+            },
+            methods: {
+                // continulPay(){
+                //     window.location.href=`goodDetail.html?gid=${this.gid}&invitecode=${this.invitecode}`
+                // }
+            },
+            mounted() {
+                // if(localStorage.getItem('gid')){
+                //     this.gid = localStorage.getItem('gid');
+                //     this.invitecode = localStorage.getItem('invitecode')
+                // }
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>商品详情</title>
+    <script src="__STATIC__/static/jquery-2.2.3.min.js"></script>
+    <script src="__STATIC__/static/vue.min.js"></script>
+    <script src="__STATIC__/static/swiper-3.4.2.jquery.min.js"></script>
+    <script src="__STATIC__/static/mui.min.js"></script>
+    <link rel="stylesheet" href="__STATIC__/static/swiper-3.4.2.min.css">
+    <link rel="stylesheet" href="__STATIC__/static/mui.min.css">
+    <script>
+        document.documentElement.style.fontSize = document.documentElement.clientWidth / 7.5 + 'px';
+    </script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            background: rgb(242,242,242);
+            font-size: 0.32rem;
+        }
+        .swiper-img{
+            width: 100%;
+            overflow: hidden;
+        }
+        .swiper-img img{
+            width: 100%;   
+        }
+        .swiper-container{
+            width: 100%;
+            height: 7.5rem;
+        }
+        .swiper-container img{
+            width: 100%;
+            height: 100%;
+        }
+        .good-infor{
+            padding: 0.2rem;
+            background: #fff;
+        }
+        .good-name{
+            color:#000;
+            font-size: 0.34rem;
+            font-weight: bold;
+        }
+        .good-add{
+            overflow: hidden;
+            margin-top: 0.2rem;
+        }
+        .good-price{
+            float: left;
+            overflow: hidden;
+            margin-top: 0.1rem
+        }
+        .add{
+            float: right;
+            font-size: 0.3rem;
+            width: 2rem;
+            position: relative;
+            text-align: end;
+        }
+        .minus-img{
+            display: inline-block;
+            height: 0.36rem;
+            width: 0.36rem;
+        }
+        .add-img{
+            display: inline-block;
+            height: 0.36rem;
+            width: 0.36rem;
+        }
+        .good-num{
+            color: #000;
+            font-size: 0.36rem;
+            display: inline-block;
+            border: none;
+            width: 0.5rem;
+            text-align: center;
+            vertical-align: 2px;
+            background: #fff;
+        }
+        .yuan-price{
+            font-size: 0.3rem;
+            text-decoration: line-through;
+            color: rgb(204,204,204);
+            float: left;
+            margin-top: 0.04rem;
+            margin-left: 0.1rem;
+        }
+        .now-peice{
+            font-size: 0.36rem;
+            color: #e71f1b;
+            float: left;
+        }
+        .other-infor{
+            overflow: hidden;
+            font-size: 0.3rem;
+            color: rgb(170,170,170);
+            margin-top: 0.2rem
+        }
+        .good-goal{
+            float: left;
+        }
+        .good-sold{
+            float: right;
+        }
+        .good-detail{
+            margin-top: 0.2rem;
+            background: #fff;
+            overflow: hidden;
+            padding: 0.2rem;
+            margin-bottom: 0.8rem;
+        }
+        .tab-change{
+            overflow: hidden;
+            border: 1px solid #e71f1b;
+            height: 0.6rem;
+            line-height: 0.6rem;
+            color: #333;
+        }
+        .tab-photo{
+            float: left;
+            width: 50%;
+            text-align: center;
+        }
+        .tab-deatil{
+            float: left;
+            width: 50%;
+            text-align: center;
+        }
+        .tab-active{
+            background: #e71f1b;
+            color: #fff;
+            height: 0.6rem;
+        }
+        .detail-footer{
+            height: 0.8rem;
+            width: 100%;
+            line-height: 0.8rem;
+            text-align: center;
+            position: fixed;
+            bottom: -1px;
+            left: 0;
+            background: #e71f1b;
+            color: #fff;
+            font-size: 0.34rem;
+        }
+        .good-norm{
+
+        }
+        .norm-li{
+            overflow: hidden;
+            font-size: 0.26rem;
+            color: rgb(51,51,51);
+            height: 0.5rem;
+            line-height: 0.5rem;
+        }
+        .norm-left{
+            float: left;
+            width: 1.2rem;
+        }
+        .norm-right{
+            margin-left: 2.2rem;
+        }
+        input{
+         user-select: auto !important;
+         -webkit-user-select:text !important;
+       }
+       .wxshow-img{
+           position: fixed;
+           left: 0;
+           top: 0;
+           height: 100%;
+           width: 100%;
+           z-index: 20;
+       }
+    </style>
+</head>
+
+<body>
+    <div id="goodDetail" v-clock v-if='goodList'>
+
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" v-for='item in goodList.goods_content'>
+                    <img :src="'http://47.97.211.84'+item">
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <div class="good-infor">
+            <div class='good-name'>
+                {{goodList.goods_name}}
+            </div>
+            <div class="good-add">
+                <div class="good-price">
+                    <div class="now-peice">￥
+                        <span v-if='goodList.goods_promotion_type == 2'>
+                            {{goodList.xianshi_price}}
+                        </span>
+                        <span v-else>
+                            {{goodList.goods_costprice}}
+                        </span>
+                    </div>
+                    <div class="yuan-price">￥{{goodList.goods_price}}</div>
+                </div>
+                <div class="add">
+                 
+                    <img src="__STATIC__/static/src/minus.png" class="minus-img" @click='minusNum'>
+                    <input type="number" class="good-num" v-model='goodNum' disabled />
+                    <img src="__STATIC__/static/src/add.png"  class="add-img" @click='goodNum++'>
+                </div>
+            </div>
+            <div class="other-infor">
+                <div class="good-goal">
+                    评分：{{goodList.evaluation_good_star}}
+                </div>
+                <div class="good-sold">
+                    库存：{{goodList.goods_storage}}件
+                </div>
+            </div>
+        </div>
+        <div class="good-detail">
+            <div class="tab-change">
+                <div class="tab-photo" :class='{"tab-active":tabIndex ==0}' @click='tabIndex =0'>
+                    图文详情
+                </div>
+                <div class="tab-deatil" :class='{"tab-active":tabIndex ==1}' @click='tabIndex =1'>
+                    商品参数
+                </div>
+            </div>
+            <div style="margin-top:0.2rem;" v-if='goodStandard'>
+                <div class="swiper-img" v-show='tabIndex ==0'>
+                    <div v-if='imgCode == 1' v-html='sliceVal(goodStandard.goods_body)'>
+
+                    </div>
+                    <div v-else-if='imgCode == 2' v-html='goodStandard.goods_body'>
+
+                    </div>
+                    <div v-else>
+                        <img :src="goodStandard.goods_body">
+                    </div>
+                    
+                </div>
+                <div class="good-norm" v-show='tabIndex ==1'>
+                    <div class="norm-li">
+                        <div class="norm-left">
+                            品牌
+                        </div>
+                        <div class="norm-right">
+                            {{goodStandard.goods_gui.pin_name}}
+                        </div>
+                    </div>
+                    <div class="norm-li">
+                        <div class="norm-left">
+                            酒精度
+                        </div>
+                        <div class="norm-right">
+                            {{goodStandard.goods_gui.du_num}}
+                        </div>
+                    </div>
+                    <div class="norm-li">
+                            <div class="norm-left">
+                                等级
+                            </div>
+                            <div class="norm-right">
+                                {{goodStandard.goods_gui.goods_level}}
+                            </div>
+                    </div>
+                    <div class="norm-li">
+                                <div class="norm-left">
+                                    适用人群
+                                </div>
+                                <div class="norm-right">
+                                    成年人
+                                </div>
+                    </div>
+                    <div class="norm-li">
+                            <div class="norm-left">
+                                储存方法
+                            </div>
+                            <div class="norm-right">
+                                阴凉干燥处
+                            </div>
+                    </div>
+                    <div class="norm-li">
+                                <div class="norm-left">
+                                    香型
+                                </div>
+                                <div class="norm-right">
+                                        {{goodStandard.goods_gui.type_name}}
+                                </div>
+                    </div>
+                    <div class="norm-li">
+                            <div class="norm-left">
+                                省份
+                            </div>
+                            <div class="norm-right">
+                                    {{goodStandard.goods_gui.goods_shen}}
+                            </div>
+                    </div>
+                    <div class="norm-li">
+                            <div class="norm-left">
+                                规格
+                            </div>
+                            <div class="norm-right">
+                                    {{goodStandard.goods_gui.goods_guige}}
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="detail-footer" @click='orderNow'>
+            立即下单
+        </div>
+    </div>
+    <script>
+            
+        new Vue({
+            el: '#goodDetail',
+            data: {
+                tabIndex: 0,
+                goodList:'',
+                goodStandard:'',
+                Base64:'',
+                goodNum:1,
+                imgCode:0,
+                gid:'',
+                invitecode:''
+            },
+            methods: {
+                minusNum(){
+                    let that=this;
+                    if(this.goodNum == 1){
+                        mui.toast("您不能再减少了")
+                    }else{
+                        that.goodNum--
+                    }
+                },
+                sliceVal(val){
+                    let value= val.slice(0,10)+ val.slice(17)
+                    return value
+                },
+                orderNow() {
+                   
+                    localStorage.setItem('goodList',JSON.stringify(this.goodList))
+                    window.location.href = 'orderPay.html?goodNum=' + this.goodNum;
+                },
+                //商品信息
+                getGoodList(){
+                    let that = this;
+                    $.ajax({
+                        url: 'http://www.jiubuzui.com/home/public/index.php/index/index/goods_detail?gid='+that.gid,
+                        type: 'get',
+                        dataType: 'json',
+                        timeout: 1000,
+                        success: function (data, status) {
+                            console.log(data)
+                            if(data.code ==200){
+                                that.goodList = data.data;
+                                console.log(that.goodList)
+                            }
+                        },
+                        fail: function (err, status) {
+                            console.log(err)
+                        }
+                    })
+                },
+                 //商品规格
+                getGoodStandard(){
+                    let that = this;
+                    $.ajax({
+                        url: 'http://www.jiubuzui.com/home/public/index.php/index/index/shopping_goods_type_spec?gid='+that.gid,
+                        type: 'get',
+                        dataType: 'json',
+                        timeout: 1000,
+                        success: function (data, status) {
+                        
+                            if(data.code ==200 && data.data){
+                                that.goodStandard = data.data;
+                               console.log(that.goodStandard.goods_body.indexOf('img'))
+                                if(that.goodStandard.goods_body.indexOf('img') != -1){
+                                    if(that.goodStandard.goods_body.indexOf('denied') != -1){
+                                        that.imgCode = 1;
+                                    }else{
+                                        that.imgCode = 2;
+                                    }
+                                }else{
+                                    that.imgCode = 0;
+                                    that.goodStandard.goods_body = 'data:image/png;base64,'+that.goodStandard.goods_body
+                                }
+                                console.log(that.imgCode)
+                                console.log(that.goodStandard)
+                            }
+                        },
+                        fail: function (err, status) {
+                            console.log(err)
+                        }
+                    })
+                }
+            },
+            mounted() {
+                    let that = this;
+                  
+                    localStorage.removeItem("goodList")
+                    localStorage.removeItem("gid")
+                    localStorage.removeItem("invitecode")
+                    //获取url参数
+                    function getParam(paramName) {
+                        paramValue = "", isFound = !1;
+                        if (this.location.search.indexOf("?") == 0 && this.location.search.indexOf("=") > 1) {
+                            arrSource = unescape(this.location.search).substring(1, this.location.search.length).split("&"), i = 0;
+                            while (i < arrSource.length && !isFound) arrSource[i].indexOf("=") > 0 && arrSource[i].split("=")[0].toLowerCase() == paramName.toLowerCase() && (paramValue = arrSource[i].split("=")[1], isFound = !0), i++
+                        }
+                        return paramValue == "" && (paramValue = null), paramValue
+                    }
+                    if(getParam('gid')){
+                        that.gid = getParam('gid')
+                        localStorage.setItem('gid',that.gid)
+                    }   
+                    if(getParam('invitecode')){
+                        that.invitecode = getParam('invitecode');
+                        localStorage.setItem('invitecode',that.invitecode)
+                    }  
+                    console.log(this.gid)
+                    this.getGoodList();
+                    this.getGoodStandard();
+
+                    var mySwiper = new Swiper('.swiper-container', {
+                        loop: true, // 循环模式选项
+                        // 如果需要分页器
+                        pagination: '.swiper-pagination',
+
+                    })
+            }
+        })
+    </script>
+</body>
+
+</html>

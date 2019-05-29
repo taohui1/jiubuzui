@@ -1,0 +1,51 @@
+var cityData3 = [{
+	value: '320000',
+	text: '江苏省',
+	children: [{
+		value: "320100",
+		text: "南京市",
+		children: [{
+			value: "320102",
+			text: "玄武区"
+		}, {
+			value: "320103",
+			text: "白下区"
+		}, {
+			value: "320104",
+			text: "秦淮区"
+		}, {
+			value: "320105",
+			text: "建邺区"
+		}, {
+			value: "320106",
+			text: "鼓楼区"
+		}, {
+			value: "320107",
+			text: "下关区"
+		}, {
+			value: "320111",
+			text: "浦口区"
+		}, {
+			value: "320113",
+			text: "栖霞区"
+		}, {
+			value: "320114",
+			text: "雨花台区"
+		}, {
+			value: "320115",
+			text: "江宁区"
+		}, {
+			value: "320116",
+			text: "六合区"
+		}, {
+			value: "320124",
+			text: "溧水县"
+		}, {
+			value: "320125",
+			text: "高淳县"
+		}, {
+			value: "320126",
+			text: "其它区"
+		}]
+	}]
+}]
